@@ -91,7 +91,7 @@ const CommunicationTile = ({ item, onSelect }) => {
   return (
     <motion.div
       className="communication-tile bg-white rounded-xl p-4 flex flex-col items-center justify-center shadow-card hover:shadow-hover border border-gray-100 transition-all duration-300"
-      whileHover={{ scale: 1.05, y: -4, backgroundColor: "#f0f4ff" }}
+      whileHover={{ scale: 1.05, y: -4, backgroundColor: "var(--secondary-light)" }}
       whileTap={{ scale: 0.95 }}
       onClick={() => onSelect(item)}
     >
@@ -132,13 +132,43 @@ const SubcategoryPill = ({ name, active, onClick }) => {
 const QuickSuggestion = ({ text, onSelect }) => {
   return (
     <motion.button
-      className="pill rounded-xl px-4 py-3 bg-white text-gray-700 whitespace-nowrap hover:bg-gray-50 border border-gray-200 shadow-sm hover:shadow transition-all duration-300"
-      whileHover={{ scale: 1.05, y: -2 }}
+      className="pill rounded-xl px-4 py-3 whitespace-nowrap transition-all duration-300"
+      style={{
+        backgroundColor: 'var(--secondary-light)',
+        color: 'var(--primary-dark)',
+        boxShadow: '3px 3px 6px rgba(166, 180, 200, 0.1), -3px -3px 6px rgba(255, 255, 255, 0.7)'
+      }}
+      whileHover={{ 
+        scale: 1.05, 
+        y: -2,
+        boxShadow: '4px 4px 8px rgba(166, 180, 200, 0.15), -4px -4px 8px rgba(255, 255, 255, 0.8)'
+      }}
       whileTap={{ scale: 0.95 }}
       onClick={() => onSelect(text)}
     >
       {text}
     </motion.button>
+  );
+};
+
+// Navigation Item Component
+const NavItem = ({ icon, label, isActive, to }) => {
+  return (
+    <Link 
+      to={to} 
+      className="flex flex-col items-center justify-center flex-1"
+    >
+      <div 
+        className={`flex flex-col items-center justify-center w-12 h-12 rounded-full`}
+        style={{
+          backgroundColor: isActive ? 'var(--secondary)' : '',
+          color: isActive ? 'var(--primary)' : 'var(--textSecondary)'
+        }}
+      >
+        <span className="text-xl mb-1">{icon}</span>
+        <span className="text-xs font-medium">{label}</span>
+      </div>
+    </Link>
   );
 };
 
@@ -188,18 +218,29 @@ const NeedsPage = () => {
   };
   
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-blue-50">
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--secondary)' }}>
       <Header />
       
       {/* Sentence Builder */}
-      <div className="sticky top-[40px] z-10 bg-white/80 backdrop-blur-sm shadow-md py-3 border-b border-gray-100">
+      <div className="sticky top-[40px] z-10 backdrop-blur-sm py-3 border-b" style={{
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+        borderColor: 'rgba(166, 180, 200, 0.1)'
+      }}>
         <div className="max-w-screen-lg mx-auto px-4">
-          <div className="min-h-12 p-4 bg-white rounded-xl mb-3 flex flex-wrap gap-2 shadow-card border border-gray-100">
+          <div className="min-h-12 p-4 rounded-xl mb-3 flex flex-wrap gap-2" style={{
+            backgroundColor: 'var(--secondary-light)',
+            boxShadow: '5px 5px 15px rgba(166, 180, 200, 0.1), -5px -5px 15px rgba(255, 255, 255, 0.7)'
+          }}>
             {sentence.length > 0 ? (
               sentence.map((word, index) => (
                 <motion.span 
                   key={index} 
-                  className="pill bg-gradient-to-r from-primary to-secondary text-white px-3 py-1 rounded-full font-medium shadow-sm"
+                  className="pill px-3 py-1 rounded-full font-medium"
+                  style={{
+                    background: 'linear-gradient(to right, var(--primary), var(--accent))',
+                    color: 'white',
+                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                  }}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.2 }}
@@ -217,8 +258,11 @@ const NeedsPage = () => {
               className={`btn flex-1 py-2 px-6 rounded-xl font-medium shadow-md flex items-center justify-center ${
                 sentence.length === 0 || !speechSynthesisAvailable
                   ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-primary to-secondary text-white hover:shadow-lg'
+                  : 'text-white hover:shadow-lg'
               }`}
+              style={sentence.length > 0 && speechSynthesisAvailable ? {
+                background: 'linear-gradient(to right, var(--primary), var(--accent))'
+              } : {}}
               whileHover={sentence.length > 0 ? { scale: 1.02 } : {}}
               whileTap={sentence.length > 0 ? { scale: 0.98 } : {}}
               onClick={handleSpeak}
@@ -250,11 +294,12 @@ const NeedsPage = () => {
         </div>
       </div>
       
-      <main className="flex-1 px-4 py-4 max-w-screen-lg mx-auto w-full pb-safe">
+      <main className="flex-1 px-4 py-4 max-w-screen-lg mx-auto w-full pb-28">
         {/* Back button */}
         <div className="mb-4">
           <motion.button
-            className="flex items-center text-primary font-medium"
+            className="flex items-center font-medium"
+            style={{ color: 'var(--primary)' }}
             onClick={handleBack}
             whileHover={{ x: -4 }}
             whileTap={{ scale: 0.95 }}
@@ -336,6 +381,23 @@ const NeedsPage = () => {
           </AnimatePresence>
         )}
       </main>
+      
+      {/* Bottom Navigation */}
+      <nav className="fixed bottom-0 left-0 right-0 h-20 border-t z-10 pb-safe" style={{
+        backgroundColor: 'var(--secondary-light)',
+        borderColor: 'rgba(166, 180, 200, 0.1)',
+        borderTopLeftRadius: '16px',
+        borderTopRightRadius: '16px',
+        boxShadow: '0 -4px 12px rgba(0, 0, 0, 0.05)'
+      }}>
+        <div className="absolute bottom-0 left-0 right-0 flex pb-4 pt-2">
+          <NavItem icon="🏠" label="Home" isActive={false} to="/" />
+          <NavItem icon="💬" label="Talk" isActive={true} to="/communicate" />
+          <NavItem icon="🧠" label="Practice" isActive={false} to="/therapy?mode=exercises" />
+          <NavItem icon="📊" label="Progress" isActive={false} to="/progress" />
+          <NavItem icon="👤" label="Profile" isActive={false} to="/profile" />
+        </div>
+      </nav>
     </div>
   );
 };

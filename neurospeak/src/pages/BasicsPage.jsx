@@ -79,7 +79,7 @@ const CommunicationTile = ({ item, onSelect }) => {
   return (
     <motion.div
       className="communication-tile bg-white rounded-xl p-4 flex flex-col items-center justify-center shadow-card hover:shadow-hover border border-gray-100 transition-all duration-300"
-      whileHover={{ scale: 1.05, y: -4, backgroundColor: "#f0f4ff" }}
+      whileHover={{ scale: 1.05, y: -4, backgroundColor: "var(--secondary-light)" }}
       whileTap={{ scale: 0.95 }}
       onClick={() => onSelect(item)}
     >
@@ -104,7 +104,7 @@ const SubcategoryPill = ({ name, active, onClick }) => {
     <motion.button
       className={`pill flex items-center justify-center rounded-xl px-4 py-3 font-medium transition-all duration-300 ${
         active 
-          ? 'bg-gradient-to-r from-primary to-secondary text-white shadow-md' 
+          ? 'bg-gradient-to-r from-primary to-accent text-white shadow-md' 
           : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
       }`}
       whileHover={{ scale: 1.05, y: -2 }}
@@ -176,18 +176,29 @@ const BasicsPage = () => {
   };
   
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-blue-50">
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--secondary)' }}>
       <Header />
       
       {/* Sentence Builder */}
-      <div className="sticky top-[40px] z-10 bg-white/80 backdrop-blur-sm shadow-md py-3 border-b border-gray-100">
+      <div className="sticky top-[40px] z-10 backdrop-blur-sm py-3 border-b" style={{ 
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+        borderColor: 'rgba(166, 180, 200, 0.1)'
+      }}>
         <div className="max-w-screen-lg mx-auto px-4">
-          <div className="min-h-12 p-4 bg-white rounded-xl mb-3 flex flex-wrap gap-2 shadow-card border border-gray-100">
+          <div className="min-h-12 p-4 rounded-xl mb-3 flex flex-wrap gap-2" style={{
+            backgroundColor: 'var(--secondary-light)',
+            boxShadow: '5px 5px 15px rgba(166, 180, 200, 0.1), -5px -5px 15px rgba(255, 255, 255, 0.7)'
+          }}>
             {sentence.length > 0 ? (
               sentence.map((word, index) => (
                 <motion.span 
                   key={index} 
-                  className="pill bg-gradient-to-r from-primary to-secondary text-white px-3 py-1 rounded-full font-medium shadow-sm"
+                  className="pill px-3 py-1 rounded-full font-medium"
+                  style={{
+                    background: 'linear-gradient(to right, var(--primary), var(--accent))',
+                    color: 'white',
+                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                  }}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.2 }}
@@ -205,8 +216,11 @@ const BasicsPage = () => {
               className={`btn flex-1 py-2 px-6 rounded-xl font-medium shadow-md flex items-center justify-center ${
                 sentence.length === 0 || !speechSynthesisAvailable
                   ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-primary to-secondary text-white hover:shadow-lg'
+                  : 'text-white hover:shadow-lg'
               }`}
+              style={sentence.length > 0 && speechSynthesisAvailable ? {
+                background: 'linear-gradient(to right, var(--primary), var(--accent))'
+              } : {}}
               whileHover={sentence.length > 0 ? { scale: 1.02 } : {}}
               whileTap={sentence.length > 0 ? { scale: 0.98 } : {}}
               onClick={handleSpeak}
@@ -218,7 +232,7 @@ const BasicsPage = () => {
                 fill="currentColor" 
                 className="w-5 h-5 mr-2"
               >
-                <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 001.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06zM18.584 5.106a.75.75 0 011.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 11-1.06-1.06 8.25 8.25 0 000-11.668.75.75 0 010-1.06z" />
+                <path fillRule="evenodd" d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 001.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06zM18.584 5.106a.75.75 0 011.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 11-1.06-1.06 8.25 8.25 0 000-11.668.75.75 0 010-1.06z" />
                 <path d="M15.932 7.757a.75.75 0 011.061 0 6 6 0 010 8.486.75.75 0 01-1.06-1.061 4.5 4.5 0 000-6.364.75.75 0 010-1.06z" />
               </svg>
               Speak
@@ -238,16 +252,17 @@ const BasicsPage = () => {
         </div>
       </div>
       
-      <main className="flex-1 px-4 py-4 max-w-screen-lg mx-auto w-full pb-safe">
+      <main className="flex-1 px-4 py-4 max-w-screen-lg mx-auto w-full pb-28">
         {/* Back button */}
         <div className="mb-4">
           <motion.button
-            className="flex items-center text-primary font-medium"
+            className="flex items-center font-medium"
+            style={{ color: 'var(--primary)' }}
             onClick={handleBack}
             whileHover={{ x: -4 }}
             whileTap={{ scale: 0.95 }}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 mr-1">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 mr-2" style={{ color: 'var(--primary)' }}>
               <path fillRule="evenodd" d="M7.72 12.53a.75.75 0 010-1.06l7.5-7.5a.75.75 0 111.06 1.06L9.31 12l6.97 6.97a.75.75 0 11-1.06 1.06l-7.5-7.5z" clipRule="evenodd" />
             </svg>
             Back to Categories
@@ -258,7 +273,7 @@ const BasicsPage = () => {
         <div className="mb-6 overflow-x-auto pb-2">
           <h2 className="text-lg font-semibold mb-3 text-gray-800 flex items-center">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 mr-2 text-primary">
-              <path d="M9 4.5a.75.75 0 01.721.544l.813 2.846a3.75 3.75 0 002.576 2.576l2.846.813a.75.75 0 010 1.442l-2.846.813a3.75 3.75 0 00-2.576 2.576l-.813 2.846a.75.75 0 01-1.442 0l-.813-2.846a3.75 3.75 0 00-2.576-2.576l-2.846-.813a.75.75 0 010-1.442l2.846-.813A3.75 3.75 0 007.466 7.89l.813-2.846A.75.75 0 019 4.5zM18 1.5a.75.75 0 011.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 11-1.06-1.06 8.25 8.25 0 000-11.668.75.75 0 010-1.06z" />
+              <path d="M9 4.5a.75.75 0 011.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 11-1.06-1.06 8.25 8.25 0 000-11.668.75.75 0 010-1.06z" />
               <path d="M15.932 7.757a.75.75 0 011.061 0 6 6 0 010 8.486.75.75 0 01-1.06-1.061 4.5 4.5 0 000-6.364.75.75 0 010-1.06z" />
             </svg>
             Quick Phrases
@@ -324,7 +339,45 @@ const BasicsPage = () => {
           </AnimatePresence>
         )}
       </main>
+      
+      {/* Bottom Navigation */}
+      <nav className="fixed bottom-0 left-0 right-0 h-20 border-t z-10 pb-safe" style={{
+        backgroundColor: 'var(--secondary-light)',
+        borderColor: 'rgba(166, 180, 200, 0.1)',
+        borderTopLeftRadius: '16px',
+        borderTopRightRadius: '16px',
+        boxShadow: '0 -4px 12px rgba(0, 0, 0, 0.05)'
+      }}>
+        <div className="absolute bottom-0 left-0 right-0 flex pb-4 pt-2">
+          <NavItem icon="🏠" label="Home" isActive={false} to="/" />
+          <NavItem icon="💬" label="Talk" isActive={true} to="/communicate" />
+          <NavItem icon="🧠" label="Practice" isActive={false} to="/therapy?mode=exercises" />
+          <NavItem icon="📊" label="Progress" isActive={false} to="/progress" />
+          <NavItem icon="👤" label="Profile" isActive={false} to="/profile" />
+        </div>
+      </nav>
     </div>
+  );
+};
+
+// Navigation Item Component
+const NavItem = ({ icon, label, isActive, to }) => {
+  return (
+    <Link 
+      to={to} 
+      className="flex flex-col items-center justify-center flex-1"
+    >
+      <div 
+        className={`flex flex-col items-center justify-center w-12 h-12 rounded-full`}
+        style={{
+          backgroundColor: isActive ? 'var(--secondary)' : '',
+          color: isActive ? 'var(--primary)' : 'var(--textSecondary)'
+        }}
+      >
+        <span className="text-xl mb-1">{icon}</span>
+        <span className="text-xs font-medium">{label}</span>
+      </div>
+    </Link>
   );
 };
 

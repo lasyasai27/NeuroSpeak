@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
+import Logo from '../assets/logo';
 
 const Header = () => {
   const [hasDynamicIsland, setHasDynamicIsland] = useState(false);
@@ -47,25 +48,29 @@ const Header = () => {
   }, []);
 
   return (
-    <header 
-      className={`sticky top-0 z-10 w-full ${hasDynamicIsland ? 'pt-safe' : ''} bg-[#f0f4ff]`}
+    <motion.header 
+      className={`sticky top-0 z-10 w-full ${hasDynamicIsland ? 'pt-safe has-dynamic-island' : ''}`}
       style={{
-        height: 'auto',
-        minHeight: '40px'
+        background: 'linear-gradient(135deg, var(--primary-dark), var(--primary))',
+        boxShadow: '0 6px 16px rgba(58, 111, 248, 0.15)',
+        borderBottomLeftRadius: '16px',
+        borderBottomRightRadius: '16px'
       }}
+      initial={{ y: -10, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.3 }}
     >
-      <div className="container mx-auto px-4 py-1 flex justify-between items-center">
+      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         <div className="flex items-center">
           <Link to="/">
-            <motion.div 
-              className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white shadow-blue"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <motion.div
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
-              <span className="text-base font-bold">N</span>
+              <Logo />
             </motion.div>
           </Link>
-          <h1 className="text-lg font-bold text-darkBlue ml-2">NeuroSpeak</h1>
         </div>
         
         <Link to="/profile">
@@ -74,7 +79,7 @@ const Header = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <div className="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center text-white shadow-sm overflow-hidden">
+            <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center overflow-hidden shadow-lg border-2 border-white">
               {currentUser?.profilePicture ? (
                 <img 
                   src={currentUser.profilePicture} 
@@ -82,20 +87,26 @@ const Header = () => {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <span className="text-sm font-medium">
+                <span className="text-sm font-bold text-primary">
                   {currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : '👤'}
                 </span>
               )}
             </div>
             {currentUser && (
-              <span className="ml-2 text-sm font-medium text-gray-700 hidden md:block">
+              <motion.span 
+                className="ml-2 text-sm font-medium text-white hidden md:block"
+                style={{ fontFamily: "var(--font-display)" }}
+                initial={{ opacity: 0, x: -5 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.1 }}
+              >
                 {currentUser.name}
-              </span>
+              </motion.span>
             )}
           </motion.div>
         </Link>
       </div>
-    </header>
+    </motion.header>
   );
 };
 
